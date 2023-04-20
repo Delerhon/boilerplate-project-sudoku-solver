@@ -15,6 +15,15 @@ module.exports = function (app) {
   const errMessageBadCoordinate = { error: 'Invalid coordinate' }
   const validFalse              = { valid: 'false' }
 
+  app.route('api/newSudoku')
+    .post( (req, res) => {
+      const newPuzzle = solver.generateASudoku()
+      if (!newPuzzle) { 
+        return  res.json( { body: { newSudoku: true }, puzzle: req.body.puzzle }) 
+      }
+                res.json( { body: { newSudoku: true }, puzzle: newPuzzle })
+    })
+
   app.route('/api/check')
     .post((req, res) => {
       const puzzleString  = req.body.puzzle
