@@ -19,9 +19,8 @@ suite('Functional Tests', () => {
             .post('/api/solve')
             .send({puzzle: puzzles[0][0]})
             .end((err, res) => {
-                expect(res.status).to.be.equal(200)
-                expect(res.body)
-                    .to.have.property('solution', puzzles[0][1])
+                assert.equal(res.status, 200)
+                assert.propertyVal(res.body, 'solution', puzzles[0][1])
                 done()
             })
     })
@@ -32,9 +31,8 @@ suite('Functional Tests', () => {
             .post('/api/solve')
             .send({puzzle: ""})
             .end((err, res) => {
-                expect(res.status).to.be.equal(200)
-                expect(res.body)
-                    .to.have.property('error', 'Required field missing')
+                assert.equal(res.status, 200)
+                assert.propertyVal(res.body, 'error', 'Required field missing')
                 done()
             })
         })           
@@ -47,9 +45,8 @@ suite('Functional Tests', () => {
             .post('/api/solve')
             .send({puzzle: puzzleStringBadChar})
             .end((err, res) => {
-                expect(res.status).to.be.equal(200)
-                expect(res.body)
-                    .to.have.property('error', 'Invalid characters in puzzle')
+                assert.equal(res.status, 200)
+                assert.propertyVal(res.body, 'error', 'Invalid characters in puzzle')
                 done()
             }) 
         })           
@@ -61,9 +58,8 @@ suite('Functional Tests', () => {
             .post('/api/solve')
             .send({puzzle: puzzleStringTooShort})
             .end((err, res) => {
-                expect(res.status).to.be.equal(200)
-                expect(res.body)
-                    .to.have.property('error', 'Expected puzzle to be 81 characters long')
+                assert.equal(res.status, 200)
+                assert.propertyVal(res.body, 'error', 'Expected puzzle to be 81 characters long')
                 done()
             })
         })  
@@ -74,9 +70,8 @@ suite('Functional Tests', () => {
             .post('/api/solve')
             .send({puzzle: puzzleStringNotSolvable})
             .end((err, res) => {
-                expect(res.status).to.be.equal(200)
-                expect(res.body)
-                    .to.have.property('error', 'Puzzle cannot be solved')
+                assert.equal(res.status, 200)
+                assert.propertyVal(res.body, 'error', 'Puzzle cannot be solved')
                 done()
             })
         })
@@ -87,7 +82,7 @@ suite('Functional Tests', () => {
             .post('/api/check')
             .send({puzzle: puzzles[0][0], coordinate: "A2", value: "3" })
             .end((err, res) => {
-                expect(res.status).to.be.equal(200)
+                assert.equal(res.status, 200)
                 done()
             })
         }) 
@@ -98,11 +93,9 @@ suite('Functional Tests', () => {
         .post('/api/check')
         .send({puzzle: puzzles[0][0], coordinate: "E4", value: "4"})
         .end((err, res) => {
-            expect(res.status).to.be.equal(200)
-            expect(res.body)
-                .to.have.haveOwnProperty('valid', false)
-            expect(res.body)
-                .to.have.deep.property('conflict', ['row'])
+            assert.equal(res.status, 200)
+            assert.propertyVal(res.body, 'valid', false)
+            assert.deepPropertyVal(res.body, 'conflict', ['row'])
             done()
             })             
         }) 
@@ -113,11 +106,9 @@ suite('Functional Tests', () => {
         .post('/api/check')
         .send({puzzle: puzzles[0][0], coordinate: "B1", value: "6"})
         .end((err, res) => {
-            expect(res.status).to.be.equal(200)
-            expect(res.body)
-                .to.have.haveOwnProperty('valid', false)
-            expect(res.body)
-                .to.have.deep.property('conflict', ['row', 'region'])
+            assert.equal(res.status, 200)
+            assert.propertyVal(res.body, 'valid', false)
+            assert.deepPropertyVal(res.body, 'conflict', ['row', 'region'])
             done()
             })             
         }) 
@@ -128,11 +119,9 @@ suite('Functional Tests', () => {
         .post('/api/check')
         .send({puzzle: puzzles[0][0], coordinate: "A5", value: "1"})
         .end((err, res) => {
-            expect(res.status).to.be.equal(200)
-            expect(res.body)
-                .to.have.haveOwnProperty('valid', false)
-            expect(res.body)
-                .to.have.deep.property('conflict', ['column', 'row', 'region'])
+            assert.equal(res.status, 200)
+            assert.propertyVal(res.body, 'valid', false)
+                assert.deepPropertyVal(res.body, 'conflict', ['column', 'row', 'region'])
             done()
             })             
         }) 
@@ -143,9 +132,8 @@ suite('Functional Tests', () => {
         .post('/api/check')
         .send({puzzle: puzzles[0][0], coordinate: "A5", value: ""})
         .end((err, res) => {
-            expect(res.status).to.be.equal(200)
-            expect(res.body)
-                .to.have.property('error', 'Required field(s) missing')
+            assert.equal(res.status, 200)
+            assert.propertyVal(res.body, 'error', 'Required field(s) missing')
             done()
             })             
         })
@@ -156,9 +144,8 @@ suite('Functional Tests', () => {
         .post('/api/check')
         .send({puzzle: puzzleStringBadChar, coordinate: "A5", value: "1"})
         .end((err, res) => {
-            expect(res.status).to.be.equal(200)
-            expect(res.body)
-                .to.have.property('error', 'Invalid characters in puzzle')
+            assert.equal(res.status, 200)
+            assert.propertyVal(res.body, 'error', 'Invalid characters in puzzle')
             done()
             })         
         })
@@ -169,9 +156,8 @@ suite('Functional Tests', () => {
         .post('/api/check')
         .send({puzzle: puzzleStringTooShort, coordinate: "A5", value: "1"})
         .end((err, res) => {
-            expect(res.status).to.be.equal(200)
-            expect(res.body)
-                .to.have.property('error', 'Expected puzzle to be 81 characters long')
+            assert.equal(res.status, 200)
+            assert.propertyVal(res.body, 'error', 'Expected puzzle to be 81 characters long')
             done()
             })         
         })
@@ -182,41 +168,37 @@ suite('Functional Tests', () => {
         .post('/api/check')
         .send({puzzle: puzzles[0][0], coordinate: "Z5", value: "1"})
         .end((err, res) => {
-            expect(res.status).to.be.equal(200)
-            expect(res.body)
-                .to.have.property('error', 'Invalid coordinate')
-                
-                chai
-                .request(server)
-                .post('/api/check')
-                .send({puzzle: puzzles[0][0], coordinate: "A11", value: "1"})
-                .end((err, res) => {
-                    expect(res.status).to.be.equal(200)
-                    expect(res.body)
-                    .to.have.property('error', 'Invalid coordinate')
-
-                    chai
-                    .request(server)
-                    .post('/api/check')
-                    .send({puzzle: puzzles[0][0], coordinate: "A0", value: "1"})
-                    .end((err, res) => {
-                        expect(res.status).to.be.equal(200)
-                        expect(res.body)
-                            .to.have.property('error', 'Invalid coordinate')
-
-                            chai
-                            .request(server)
-                            .post('/api/check')
-                            .send({puzzle: puzzles[0][0], coordinate: "AA1", value: "1"})
-                            .end((err, res) => {
-                                expect(res.status).to.be.equal(200)
-                                expect(res.body)
-                                    .to.have.property('error', 'Invalid coordinate')
-                                done()
-                                }) 
-                    })
-                }) 
+            assert.equal(res.status, 200)
+            assert.propertyVal(res.body, 'error', 'Invalid coordinate')
             })   
+
+        chai
+        .request(server)
+        .post('/api/check')
+        .send({puzzle: puzzles[0][0], coordinate: "A11", value: "1"})
+        .end((err, res) => {
+            assert.equal(res.status, 200)
+            assert.propertyVal(res.body, 'error', 'Invalid coordinate')
+        }) 
+
+        chai
+        .request(server)
+        .post('/api/check')
+        .send({puzzle: puzzles[0][0], coordinate: "A0", value: "1"})
+        .end((err, res) => {
+            assert.equal(res.status, 200)
+            assert.propertyVal(res.body, 'error', 'Invalid coordinate')
+            })
+
+        chai
+        .request(server)
+        .post('/api/check')
+        .send({puzzle: puzzles[0][0], coordinate: "AA1", value: "1"})
+        .end((err, res) => {
+            assert.equal(res.status, 200)
+            assert.propertyVal(res.body, 'error', 'Invalid coordinate')
+            done()
+            }) 
         })
 
         test(`Check a puzzle placement with invalid placement value: POST request to /api/check`, (done) => {
@@ -225,31 +207,27 @@ suite('Functional Tests', () => {
             .post('/api/check')
             .send({puzzle: puzzles[0][0], coordinate: "A5", value: "d"})
             .end((err, res) => {
-                expect(res.status).to.be.equal(200)
-                expect(res.body)
-                    .to.have.property('error', 'Invalid value')
-                    
-                    chai
-                    .request(server)
-                    .post('/api/check')
-                    .send({puzzle: puzzles[0][0], coordinate: "A5", value: "10"})
-                    .end((err, res) => {
-                        expect(res.status).to.be.equal(200)
-                        expect(res.body)
-                            .to.have.property('error', 'Invalid value')
-                            
-                            chai
-                            .request(server)
-                            .post('/api/check')
-                            .send({puzzle: puzzles[0][0], coordinate: "A5", value: "0"})
-                            .end((err, res) => {
-                                expect(res.status).to.be.equal(200)
-                                expect(res.body)
-                                    .to.have.property('error', 'Invalid value')
-                                })
-                            done()
-                        })
+                assert.equal(res.status, 200)
+                assert.propertyVal(res.body, 'error', 'Invalid value') 
+            })
+            chai
+            .request(server)
+            .post('/api/check')
+            .send({puzzle: puzzles[0][0], coordinate: "A5", value: "10"})
+            .end((err, res) => {
+                assert.equal(res.status, 200)
+                assert.propertyVal(res.body, 'error', 'Invalid value')
                 })
+
+            chai
+            .request(server)
+            .post('/api/check')
+            .send({puzzle: puzzles[0][0], coordinate: "A5", value: "0"})
+            .end((err, res) => {
+                assert.equal(res.status, 200)
+                assert.propertyVal(res.body, 'error', 'Invalid value')
+                })
+            done()
         })
     
 /*           
