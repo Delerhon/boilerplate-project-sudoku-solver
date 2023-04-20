@@ -24,9 +24,12 @@ module.exports = function (app) {
       const puzzleString  = req.body.puzzle
       const coordinate    = req.body.coordinate
       const value         = req.body.value
-      if (  coordinate    === "" |
-            value         === "" |
-            puzzleString  === "")
+      if (  coordinate    === ""  |
+            value         === ""  |
+            puzzleString  === ""  |
+            !coordinate           |
+            !value                |
+            !puzzleString )
       {
        res.send(errMessageMissingFields) 
        return
@@ -76,15 +79,15 @@ module.exports = function (app) {
     });
 };
 
-function getCol(coordinate) { // CHECK
+function getCol(coordinate) { 
   return coordinate.split("").pop().toString()
 }
 
-function getRow(coordinate){ // CHECK
+function getRow(coordinate){ 
     return coordinate.charCodeAt(0) - 64
 }
 
-function coordinateIsValid(coordinate) { // CHECK 
+function coordinateIsValid(coordinate) {  
   const regex = /^[a-i][1-9]$/i
   return !!coordinate.match(regex)
 }
