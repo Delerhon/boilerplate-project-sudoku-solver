@@ -71,13 +71,14 @@ class SudokuSolver {
       })
       const puzzleStringToCheck = solvingPuzzleArrayAfter.join('')
       puzzleIsSolved = !!puzzleStringToCheck.match(solvedPuzzleRegex) // for Debug can be shortened
-      puzzleStringChangedThisLoop = solvedNumbers[Object.keys(solvedNumbers).length-1].loopCount == loopCount
-
+      if (Object.keys(solvedNumbers).length > 0) {
+        puzzleStringChangedThisLoop = solvedNumbers[Object.keys(solvedNumbers).length-1].loopCount == loopCount
+      }
       keepGoing = !puzzleIsSolved && puzzleStringChangedThisLoop && Date.now() - timer <= 200
 
     } while ( keepGoing );
 
-      console.log(Date.now() - timer);
+      //console.log(Date.now() - timer);
       if (!!solvingPuzzleArrayAfter.join('').match(solvedPuzzleRegex)) {return solvingPuzzleArrayAfter.join('')}
       return 'error'
     
@@ -91,19 +92,24 @@ class SudokuSolver {
   }
 
   generateASudoku() {
-    const puzzle = ".".repeat(81).split('')
+    let puzzle = ".".repeat(81).split('')
     let puzzleIncomplete = true
     let validPosition = false
     let keepGoing = true
     let timer = new Date()
+    let numDots = 0
+
     do {
+      if ( numDots == 40) { 
+        puzzle = [] 
+        puzzle = ".".repeat(81).split('')
+      }
       validPosition = false
   
-      const randomValue     = Math.flat(Math.random() * 9)
-      const randomIndex  = Math.flat(Math.random() * 81) - 1
+      const randomValue     = Math.floor(Math.random() * 9 + 1)
+      const randomIndex  = Math.floor(Math.random() * 81) - 1
   
-      if (puzzle[randomIndex] != '.') {
-        puzzle[randomIndex] = randomValue
+      if (puzzle[randomIndex] == '.') {
         const row = this.getRow(randomIndex)
         const column = this.getColumn(randomIndex)
   
@@ -114,11 +120,16 @@ class SudokuSolver {
           { this.checkRegionPlacement(puzzle.join(''), row, column, randomValue ) ? validPosition = true : validPosition = false }
         if(validPosition == true)
           { 
+            puzzle[randomIndex] = randomValue
             puzzleIncomplete = this.solve(puzzle.join('')) == 'error'
           }
     }
-      keepGoing = puzzleIncomplete && Date.now() - timer < 1000
+      numDots = puzzle.filter( v => v == '.').length
+      keepGoing = puzzleIncomplete && Date.now() - timer < 1000 && numDots < 40
     } while (puzzleIncomplete)
+    let goodPuzzle = false    
+    
+
     const newPuzzle = puzzle.join('')
     const validPuzzle = solver.validate(newPuzzle)
 
