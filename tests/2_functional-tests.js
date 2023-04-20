@@ -185,38 +185,38 @@ suite('Functional Tests', () => {
             expect(res.status).to.be.equal(200)
             expect(res.body)
                 .to.have.property('error', 'Invalid coordinate')
+                
+                chai
+                .request(server)
+                .post('/api/check')
+                .send({puzzle: puzzles[0][0], coordinate: "A11", value: "1"})
+                .end((err, res) => {
+                    expect(res.status).to.be.equal(200)
+                    expect(res.body)
+                    .to.have.property('error', 'Invalid coordinate')
+
+                    chai
+                    .request(server)
+                    .post('/api/check')
+                    .send({puzzle: puzzles[0][0], coordinate: "A0", value: "1"})
+                    .end((err, res) => {
+                        expect(res.status).to.be.equal(200)
+                        expect(res.body)
+                            .to.have.property('error', 'Invalid coordinate')
+
+                            chai
+                            .request(server)
+                            .post('/api/check')
+                            .send({puzzle: puzzles[0][0], coordinate: "AA1", value: "1"})
+                            .end((err, res) => {
+                                expect(res.status).to.be.equal(200)
+                                expect(res.body)
+                                    .to.have.property('error', 'Invalid coordinate')
+                                done()
+                                }) 
+                    })
+                }) 
             })   
-            
-        chai
-        .request(server)
-        .post('/api/check')
-        .send({puzzle: puzzles[0][0], coordinate: "A11", value: "1"})
-        .end((err, res) => {
-            expect(res.status).to.be.equal(200)
-            expect(res.body)
-                .to.have.property('error', 'Invalid coordinate')
-            }) 
-
-        chai
-        .request(server)
-        .post('/api/check')
-        .send({puzzle: puzzles[0][0], coordinate: "A0", value: "1"})
-        .end((err, res) => {
-            expect(res.status).to.be.equal(200)
-            expect(res.body)
-                .to.have.property('error', 'Invalid coordinate')
-            })
-
-        chai
-        .request(server)
-        .post('/api/check')
-        .send({puzzle: puzzles[0][0], coordinate: "AA1", value: "1"})
-        .end((err, res) => {
-            expect(res.status).to.be.equal(200)
-            expect(res.body)
-                .to.have.property('error', 'Invalid coordinate')
-            done()
-            }) 
         })
 
         test(`Check a puzzle placement with invalid placement value: POST request to /api/check`, (done) => {
@@ -228,28 +228,28 @@ suite('Functional Tests', () => {
                 expect(res.status).to.be.equal(200)
                 expect(res.body)
                     .to.have.property('error', 'Invalid value')
+                    
+                    chai
+                    .request(server)
+                    .post('/api/check')
+                    .send({puzzle: puzzles[0][0], coordinate: "A5", value: "10"})
+                    .end((err, res) => {
+                        expect(res.status).to.be.equal(200)
+                        expect(res.body)
+                            .to.have.property('error', 'Invalid value')
+                            
+                            chai
+                            .request(server)
+                            .post('/api/check')
+                            .send({puzzle: puzzles[0][0], coordinate: "A5", value: "0"})
+                            .end((err, res) => {
+                                expect(res.status).to.be.equal(200)
+                                expect(res.body)
+                                    .to.have.property('error', 'Invalid value')
+                                })
+                            done()
+                        })
                 })
-
-            chai
-            .request(server)
-            .post('/api/check')
-            .send({puzzle: puzzles[0][0], coordinate: "A5", value: "10"})
-            .end((err, res) => {
-                expect(res.status).to.be.equal(200)
-                expect(res.body)
-                    .to.have.property('error', 'Invalid value')
-                })
-
-            chai
-            .request(server)
-            .post('/api/check')
-            .send({puzzle: puzzles[0][0], coordinate: "A5", value: "0"})
-            .end((err, res) => {
-                expect(res.status).to.be.equal(200)
-                expect(res.body)
-                    .to.have.property('error', 'Invalid value')
-                })
-            done()
         })
     
 /*           
