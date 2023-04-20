@@ -24,8 +24,9 @@ module.exports = function (app) {
       const puzzleString  = req.body.puzzle
       const coordinate    = req.body.coordinate
       const value         = req.body.value
-      if (  coordinate === "" |
-            value      === "" )
+      if (  coordinate    === "" |
+            value         === "" |
+            puzzleString  === "")
       {
        res.send(errMessageMissingFields) 
        return
@@ -65,7 +66,7 @@ module.exports = function (app) {
     
   app.route('/api/solve')
     .post((req, res) => {
-      if (  req.body.puzzle == "" )  { return res.json(errMessageMissingPuzzle) }
+      if (  req.body.puzzle == "" )   { return res.json(errMessageMissingPuzzle) }
 
       const valid = solver.validate(req.body.puzzle)
       if (  valid.error == "char")    { return res.json(errMessageBadChars) }
