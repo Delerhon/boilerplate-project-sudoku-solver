@@ -8,8 +8,8 @@ class SudokuSolver {
     
     const checkedValues = puzzleString.split('').map( (value, i) => {
       if (value == '.') { return true}
-      const column            = getColumn(i)
-      const row               = getRow(i)
+      const column            = this.getColumn(i)
+      const row               = this.getRow(i)
       const tempPuzzleString  = puzzleString.substring(0, i) + "." + puzzleString.substring(i + 1)
       
       if (!this.checkRowPlacement(tempPuzzleString, row, column, value))    { return false }
@@ -44,8 +44,9 @@ class SudokuSolver {
     const solvingPuzzleArrayAfter = puzzleString.split('')
     const solvedPuzzleRegex = /^[\d]{81}$/i
     const solvedNumbers= {}
+    let keepGoing = true
 
-    let puzzleStringChangeThisLoop = false
+    let puzzleStringChangedThisLoop = false
     let puzzleIsSolved = false
 
     let loopCount = 0
@@ -70,40 +71,78 @@ class SudokuSolver {
       })
       const puzzleStringToCheck = solvingPuzzleArrayAfter.join('')
       puzzleIsSolved = !!puzzleStringToCheck.match(solvedPuzzleRegex) // for Debug can be shortened
-      puzzleStringChangeThisLoop = solvedNumbers[Object.keys(solvedNumbers).length-1].loopCount == loopCount
-    } while ( puzzleStringChangeThisLoop | 
-              !puzzleIsSolved && 
-              Date.now() - timer <= 500);
+      puzzleStringChangedThisLoop = solvedNumbers[Object.keys(solvedNumbers).length-1].loopCount == loopCount
+
+      keepGoing = !puzzleIsSolved && puzzleStringChangedThisLoop && Date.now() - timer <= 200
+
+    } while ( keepGoing );
+
       console.log(Date.now() - timer);
       if (!!solvingPuzzleArrayAfter.join('').match(solvedPuzzleRegex)) {return solvingPuzzleArrayAfter.join('')}
       return 'error'
     
+  }
+  getRow(index) {
+    return Math.floor(index / 9) + 1
+  }
+  
+  getColumn(index) {
+    return (index % 9 ) + 1
+  }
+
+  generateASudoku() {
+    const puzzle = ".".repeat(81).split('')
+    let puzzleIncomplete = true
+    let validPosition = false
+    let keepGoing = true
+    let timer = new Date()
+    do {
+      validPosition = false
+  
+      const randomValue     = Math.flat(Math.random() * 9)
+      const randomIndex  = Math.flat(Math.random() * 81) - 1
+  
+      if (puzzle[randomIndex] != '.') {
+        puzzle[randomIndex] = randomValue
+        const row = this.getRow(randomIndex)
+        const column = this.getColumn(randomIndex)
+  
+        this.checkColPlacement(puzzle.join(''), row, column, randomValue )        ? validPosition = true : validPosition = false
+        if(validPosition == true) 
+          { this.checkRowPlacement(puzzle.join(''), row, column, randomValue )    ? validPosition = true : validPosition = false }
+        if(validPosition == true) 
+          { this.checkRegionPlacement(puzzle.join(''), row, column, randomValue ) ? validPosition = true : validPosition = false }
+        if(validPosition == true)
+          { 
+            puzzleIncomplete = this.solve(puzzle.join('')) == 'error'
+          }
+    }
+      keepGoing = puzzleIncomplete && Date.now() - timer < 1000
+    } while (puzzleIncomplete)
+    const newPuzzle = puzzle.join('')
+    const validPuzzle = solver.validate(newPuzzle)
+
+    return validPuzzle ? newPuzzle : false
   }
 }
 
 const solver = new SudokuSolver()
 
 function getCoordinate(index) {
-  const row     = String.fromCharCode(getRow(index) + 64)
-  const column  = getColumn(index)
+  const row     = String.fromCharCode(solver.getRow(index) + 64)
+  const column  = solver.getColumn(index)
   return row + column
 }
 function canNumberBePlacedInCoordinate(puzzle, v, index) {
-  const row     = getRow(index)
-  const column  = getColumn(index)
+  const row     = solver.getRow(index)
+  const column  = solver.getColumn(index)
   if (!solver.checkColPlacement(puzzle, row, column, v))     {return false}
   if (!solver.checkRegionPlacement(puzzle, row, column, v))  {return false}
   if (!solver.checkRowPlacement(puzzle, row, column, v))     {return false}
   return true
 }
 
-function getRow(index) {
-  return Math.floor(index / 9) + 1
-}
 
-function getColumn(index) {
-  return (index % 9 ) + 1
-}
 
 function getRowAsArrayFromPuzzleString(puzzleString, row) {
   return puzzleString.split('', row * 9).slice(-9)
@@ -131,4 +170,4 @@ function isValueOfCoordinateAllowed(puzzleString, row, column) {
   const stringPositionOfCoordinate = (column - 1) + (row - 1) * 9
   return puzzleString.charAt(stringPositionOfCoordinate) == "."
 }
-module.exports = SudokuSolver;
+module.exports = SudokuSolver
