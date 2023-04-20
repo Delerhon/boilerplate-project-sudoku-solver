@@ -1,5 +1,15 @@
 code {
-  background: #d0d0d5;
+  background: #333333;
+}
+
+body {
+  background: #333333;
+  color: #cfcfcf;
+}
+
+.checker, .puzzle {
+  background: #5a5a5a;
+  color: #cfcfcf;
 }
 
 .container {
@@ -14,6 +24,7 @@ code {
 
 textarea {
   width: 100%;
+  height: 20px;
 }
 
 #user-stories {
@@ -54,19 +65,19 @@ td {
 }
 
 .yAxisLegend tr td {
-  border: 1px solid rgba(0,0,0,0);
+  border: 1px solid rgba(216, 216, 216, 0);
   width: 2em;
   height: 1.95em;
 }
 
 .xAxisLegend {
-  border: 3px solid rgba(0,0,0,0);
+  border: 3px solid rgba(216, 216, 216, 0);
   border-spacing: 0;
   font-weight: bold;
 }
 
 .xAxisLegend tr td {
-  border: 1px solid rgba(0,0,0,0);
+  border: 1px solid rgba(216, 216, 216, 0);
   width: 2em;
   height: 2em;
   text-align: center;
@@ -75,11 +86,11 @@ td {
 }
 
 .xAxisLegend tr td:nth-of-type(3n) {
-  border-right: 3px solid rgba(0,0,0,0);
+  border-right: 3px solid rgba(216, 216, 216, 0);
 }
 
 .sudoku-input {
-  border: 1px solid black;
+  border: 1px solid rgb(136, 136, 136);
   width: 2em;
   height: 2em;
   text-align: center;
