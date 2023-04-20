@@ -4,8 +4,8 @@ const valInput = document.getElementById("val");
 const errorMsg = document.getElementById("error");
 
 document.addEventListener("DOMContentLoaded", () => {
-  textArea.value = generateASudoku
-    //"..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..";
+  textArea.value = 
+    "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..";
   fillpuzzle(textArea.value);
 });
 
@@ -62,12 +62,14 @@ async function getChecked() {
 }
 
 async function getASudoku() {
+  const stuff = {"puzzle": textArea.value}
    const data = await fetch("/api/newSudoku", {
     method: "POST",
     headers: {
       "Accept": "application/json",
       "Content-type": "application/json"
-    }
+    },
+    body: JSON.stringify(stuff)
   })
   const parsed = await data.json();
   errorMsg.innerHTML = `<code>${JSON.stringify(parsed.body, null, 2)}</code>`;
