@@ -47,9 +47,11 @@ module.exports = function (app) {
 
       const row = getRow(coordinate)
       const column = getCol(coordinate)
-      const goodColPlacement    = solver.checkColPlacement(puzzleString, row, column, value)
-      const goodRowPlacement    = solver.checkRowPlacement(puzzleString, row, column, value)
-      const goodRegionPlacement = solver.checkRegionPlacement(puzzleString, row, column, value)
+      const index = positionInPuzzleString(row, column)
+      const newPuzzleString = puzzleString.substring(0, index ) + '.' + puzzleString.substring(index + 1)
+      const goodColPlacement    = solver.checkColPlacement(newPuzzleString, row, column, value)
+      const goodRowPlacement    = solver.checkRowPlacement(newPuzzleString, row, column, value)
+      const goodRegionPlacement = solver.checkRegionPlacement(newPuzzleString, row, column, value)
       const conflictArray = []
       if ( !goodColPlacement )    { conflictArray.push('column') }
       if ( !goodRowPlacement )    { conflictArray.push('row') }
@@ -63,7 +65,7 @@ module.exports = function (app) {
     
   app.route('/api/solve')
     .post((req, res) => {
-      if (  req.body.puzzle === "" )  { return res.json(errMessageMissingPuzzle) }
+      if (  req.body.puzzle == "" )  { return res.json(errMessageMissingPuzzle) }
 
       const valid = solver.validate(req.body.puzzle)
       if (  valid.error == "char")    { return res.json(errMessageBadChars) }
@@ -89,4 +91,8 @@ function coordinateIsValid(coordinate) { // CHECK
 function valueIsValid(value) { // CHECK
   const regex = /^[1-9]$/i
   return !!value.match(regex)
+}
+
+function positionInPuzzleString(row, column) {
+  return (column - 1) + ((row - 1) * 9)
 }
