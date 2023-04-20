@@ -56,7 +56,9 @@ async function getChecked() {
     body: JSON.stringify(stuff)
   })
   const parsed = await data.json();
-  errorMsg.innerHTML = `<code>${JSON.stringify(parsed, null, 2)}</code>`;
+  errorMsg.innerHTML = `<code>${JSON.stringify(parsed.body, null, 2)}</code>`;
+  textArea.value = `${parsed.puzzle}`
+  fillpuzzle(textArea.value)
 }
 
 
