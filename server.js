@@ -16,6 +16,14 @@ app.use(cors({origin: '*'})); //For FCC testing purposes only
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  console.log(`body: `);
+  console.log(req.body);
+ 
+  next()
+})
+
 //Index page (static HTML)
 app.route('/')
   .get(function (req, res) {
@@ -28,12 +36,6 @@ fccTestingRoutes(app);
 // User routes
 apiRoutes(app);
 
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  console.log(`body: ${req.body}`);
- 
-  next()
-})
     
 //404 Not Found Middleware
 app.use(function(req, res, next) {
