@@ -27,6 +27,13 @@ fccTestingRoutes(app);
 
 // User routes
 apiRoutes(app);
+
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  console.log(`body: ${req.body}`);
+ 
+  next()
+})
     
 //404 Not Found Middleware
 app.use(function(req, res, next) {
