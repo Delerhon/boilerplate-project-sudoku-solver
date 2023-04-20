@@ -66,7 +66,7 @@ module.exports = function (app) {
     
   app.route('/api/solve')
     .post((req, res) => {
-      if (  req.body.puzzle == "" )   { return res.json(errMessageMissingPuzzle) }
+      if (  req.body.puzzle == "" | !req.body.puzzle)   { return res.json(errMessageMissingPuzzle) }
 
       const valid = solver.validate(req.body.puzzle)
       if (  valid.error == "char")    { return res.json(errMessageBadChars) }
