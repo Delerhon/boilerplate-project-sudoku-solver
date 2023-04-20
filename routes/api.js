@@ -14,10 +14,6 @@ module.exports = function (app) {
   const errMessageBadValue      = { error: 'Invalid value' }
   const errMessageBadCoordinate = { error: 'Invalid coordinate' }
   const validFalse              = { valid: 'false' }
-  const validTrue               = { valid: 'true' }
-  const unexpectedError         = { error: 'unexpected error in solve.validate()' }
-
-  
 
   app.route('/api/check')
     .post((req, res) => {
@@ -62,8 +58,8 @@ module.exports = function (app) {
       if ( !goodRegionPlacement ) { conflictArray.push('region') }
 
       if( conflictArray.length > 0 ) { return res.json( { valid: false, conflict: conflictArray } )}
-
-      return res.json({ valid: true })
+      const updatedPuzzle = puzzleString.substring(0, index ) + value + puzzleString.substring(index + 1)
+      return res.json({ body: { valid: true }, puzzle: updatedPuzzle })
       
     });
     
