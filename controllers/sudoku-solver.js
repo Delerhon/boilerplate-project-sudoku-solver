@@ -63,9 +63,12 @@ class SudokuSolver {
         possibleDigits.push(...valueArray.map((v) => {
           return canNumberBePlacedInCoordinate(solvingPuzzleArrayAfter.join(''), v, index)
         }))
-
-        if ( possibleDigits.filter(bool => bool == true).length > 1) {return false}
+        const howManyValuesAreTrue = possibleDigits.filter(bool => bool == true).length
+        if ( howManyValuesAreTrue > 1 | howManyValuesAreTrue == 0) {return false}
         const myNumber = possibleDigits.findIndex(bool => bool == true) + 1 // for Debug can be shortened
+        if(myNumber == 0) {
+          console.log('shit');
+        }
         solvedNumbers[Object.keys(solvedNumbers).length] = {coordinate: getCoordinate(index), value: myNumber, loopCount}
         solvingPuzzleArrayAfter[index] = myNumber.toString()
       })
@@ -74,11 +77,11 @@ class SudokuSolver {
       if (Object.keys(solvedNumbers).length > 0) {
         puzzleStringChangedThisLoop = solvedNumbers[Object.keys(solvedNumbers).length-1].loopCount == loopCount
       }
-      keepGoing = !puzzleIsSolved && puzzleStringChangedThisLoop && Date.now() - timer <= 200
+      keepGoing = !puzzleIsSolved && puzzleStringChangedThisLoop && Date.now() - timer <= 60
 
     } while ( keepGoing );
 
-      //console.log(Date.now() - timer);
+      // console.log(Date.now() - timer);
       if (!!solvingPuzzleArrayAfter.join('').match(solvedPuzzleRegex)) {return solvingPuzzleArrayAfter.join('')}
       return 'error'
     
@@ -125,13 +128,12 @@ class SudokuSolver {
           }
     }
       numDots = puzzle.filter( v => v == '.').length
-      keepGoing = puzzleIncomplete && Date.now() - timer < 1000 && numDots < 40
-    } while (puzzleIncomplete)
-    let goodPuzzle = false    
-    
+      keepGoing = puzzleIncomplete && Date.now() - timer < 300 && numDots < 40
+    } while (puzzleIncomplete)    
 
     const newPuzzle = puzzle.join('')
     const validPuzzle = solver.validate(newPuzzle)
+    console.log(Date.now() - timer);
 
     return validPuzzle ? newPuzzle : false
   }
